@@ -2,8 +2,7 @@
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module Parser
-  ( testFunc,
-    writeToFile,
+  ( writeToFile,
     parseFile,
     loadCollection,
   )
@@ -18,14 +17,6 @@ import Data.Maybe (isJust)
 import GHC.Generics ()
 import System.IO
 import Text.Regex.TDFA (AllMatches (getAllMatches), (=~))
-
-testFunc :: IO ()
-testFunc = do
-  handle <- openFile "Project/archive/test.txt" ReadMode
-  contents <- hGetLine handle
-  putStr contents
-  parseFile "Project/archive/test.txt"
-  hClose handle
 
 writeToFile :: IO ()
 writeToFile = do
