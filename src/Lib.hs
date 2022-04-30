@@ -1,15 +1,13 @@
 module Lib
-  ( someFunc,
+  ( someFunc
   )
 where
 
-import Parser
+-- import Parser
+import Reader
 import System.IO
 
 someFunc :: IO ()
 someFunc = do
-  handle <- openFile "archive/test.txt" ReadMode
-  contents <- hGetLine handle
-  putStr contents
-  parseFile "archive/test.txt"
-  hClose handle
+  putStr "test123"
+  --parse
