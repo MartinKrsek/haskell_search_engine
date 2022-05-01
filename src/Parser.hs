@@ -15,12 +15,11 @@ HTML to [String] of words.
 -}
 htmlToWordList :: String -> String -> IO ()
 htmlToWordList url html = do
-  putStrLn url
   src <- stringToIoString html
   let foundWords = fromBody $ parseTags src
-  mapM_ print foundWords
+  -- mapM_ print foundWords
   writeMyFile url foundWords
-  where fromBody = words . innerText
+  where fromBody = words . innerText . dropWhile (~/= "<body>")
 
 parse :: String -> String -> IO ()
 parse url html = htmlToWordList url html
