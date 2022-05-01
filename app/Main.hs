@@ -1,9 +1,12 @@
 module Main where
 
 import Data.Aeson
-import Lib
 import qualified Data.ByteString.Lazy as B
+import Lib
 import Text.Regex.TDFA
+import Reader
 
 main :: IO ()
-main = someFunc
+main = do 
+    readMyFile "archive/testBig.txt"
+    putStr "Finished successfully!"
