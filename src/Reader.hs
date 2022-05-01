@@ -16,6 +16,8 @@ import Data.Char
 import Data.Maybe (isJust, catMaybes)
 import GHC.Generics ()
 import System.IO
+import Data.Foldable
+import Parser
 
 loadCollection :: FilePath -> IO B.ByteString
 loadCollection = B.readFile
@@ -26,8 +28,10 @@ readMyFile file = do
   let byLine = B.split (c2w '\n') res
   let decoded = map (\line -> decode line :: Maybe WebPage) byLine
   let r = catMaybes decoded
-  -- let asd = maybe "Maybe" getUrl (head decoded)
-  -- putStr asd
+  forM_ r $ \s -> do
+    let url = getUrl s
+    let html = getHtml s
+    parse url html
   return r
 
 getUrl :: WebPage -> String

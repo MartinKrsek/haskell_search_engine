@@ -1,59 +1,22 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
-
 module Parser
-  ( writeToFile,
-    parseFile,
-    loadCollection,
-  )
+  ( parse )
 where
-
-import Control.Applicative
-import Data.Aeson
-import Data.ByteString.Internal (c2w)
-import qualified Data.ByteString.Lazy as B
 import Data.Char
-import Data.Maybe (isJust)
-import GHC.Generics ()
-import System.IO
-import Text.Regex.TDFA (AllMatches (getAllMatches), (=~))
+import Text.HTML.TagSoup
 
-writeToFile :: IO ()
-writeToFile = do
-  writeFile "girlfriendcaps.txt" "test123"
+stringToIoString :: String -> IO String
+stringToIoString string = return string
 
-loadCollection :: FilePath -> IO B.ByteString
-loadCollection = B.readFile
+{-
+Method which takes url and html and writes them to new file.
+-}
+htmlToWordList :: String -> String -> IO ()
+htmlToWordList url html = do
+  putStrLn url
+  src <- stringToIoString html
+  let lastModifiedDateTime = fromFooter $ parseTags src
+  mapM_ print lastModifiedDateTime
+  where fromFooter = words . innerText
 
-parseFile :: FilePath -> IO [Maybe WebPage]
-parseFile file = do
-  res <- loadCollection file
-  let byLine = B.split (c2w '\n') res
-  let decoded = map (\line -> decode line :: Maybe WebPage) byLine
-  -- let r = filter isJust decoded
-  let asd = maybe "" getHtml (head decoded)
-  putStr asd
-  return decoded
-
-getUrl :: WebPage -> String
-getUrl (WebPage url _) = url
-
-getHtml :: WebPage -> String
-getHtml (WebPage _ html) = html
-
-parseHtml :: String -> IO ()
-parseHtml string = do
-  -- getAllMatches (string =~ "(?<=This is).*?(?=sentence)")
-  putStr "test"
-
-data WebPage = WebPage
-  { url :: String,
-    htmlContent :: String
-  }
-  deriving (Show)
-
-instance FromJSON WebPage where
-  parseJSON (Object v) =
-    WebPage
-      <$> (v .: "url")
-      <*> (v .: "html_content")
+parse :: String -> String -> IO ()
+parse url html = htmlToWordList url html
