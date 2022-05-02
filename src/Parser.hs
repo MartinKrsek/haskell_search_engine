@@ -19,7 +19,7 @@ htmlToWordList url html = do
   let foundWords = fromBody $ parseTags src
   -- mapM_ print foundWords
   writeMyFile url foundWords
-  where fromBody = words . innerText . dropWhile (~/= "<body>")
+  where fromBody = words . innerText . dropWhile (~/= "<body>") .takeWhile (~/= "</body>")
 
 parse :: String -> String -> IO ()
 parse url html = htmlToWordList url html
