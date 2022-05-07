@@ -10,16 +10,13 @@ stringToIoString :: String -> IO String
 stringToIoString string = return string
 
 {-
-Method which takes url and html and parses given 
+Method which takes id and html and parses given 
 HTML to [String] of words.
 -}
-htmlToWordList :: String -> String -> IO ()
-htmlToWordList url html = do
+parse :: Integer -> String -> IO ()
+parse id html = do
   src <- stringToIoString html
   let foundWords = fromBody $ parseTags src
   -- mapM_ print foundWords
-  writeMyFile url foundWords
+  writeParsedFile id foundWords
   where fromBody = words . innerText . dropWhile (~/= "<body>") .takeWhile (~/= "</body>")
-
-parse :: String -> String -> IO ()
-parse url html = htmlToWordList url html

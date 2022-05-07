@@ -18,6 +18,7 @@ import GHC.Generics ()
 import System.IO
 import Data.Foldable
 import Parser
+import Writer 
 
 loadCollection :: FilePath -> IO B.ByteString
 loadCollection = B.readFile
@@ -28,10 +29,13 @@ readMyFile file = do
   let byLine = B.split (c2w '\n') res
   let decoded = map (\line -> decode line :: Maybe WebPage) byLine
   let r = catMaybes decoded
-  forM_ r $ \s -> do
-    let url = getUrl s
-    let html = getHtml s
-    parse url html
+  let a = zip [1..] r
+  forM_ a $ \s -> do
+    let url = getUrl (snd(s))
+    let id = fst(s)
+    let html = getHtml (snd(s))
+    writeIndices id url
+    parse id html
   return r
 
 getUrl :: WebPage -> String

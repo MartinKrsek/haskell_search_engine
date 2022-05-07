@@ -8,5 +8,5 @@ import Reader
 
 main :: IO ()
 main = do 
-    readMyFile "archive/testBig.txt"
+    readMyFile "archive/test.txt"
     putStr "Finished successfully!"
