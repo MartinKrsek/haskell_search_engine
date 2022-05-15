@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric, DeriveAnyClass, OverloadedStrings #-}
 module Writer
-  ( writeMyFile )
+  ( writeParsedFile, writeIndices )
 where
 import GHC.Generics
 import Data.Text
@@ -10,11 +10,20 @@ import Data.Text.Lazy.IO as I
 import Data.Aeson.Text (encodeToLazyText)
 import Main.Utf8
 
-writeMyFile :: String -> [String] -> IO ()
-writeMyFile url htmlWords = withUtf8 $ do
-    let parsedHtml = ParsedHtml { url = url, listOfWords = htmlWords }
-    I.appendFile "archive/output.json" $ encodeToLazyText parsedHtml
-    I.appendFile "archive/output.json" $ "\n"
-
-data ParsedHtml = ParsedHtml { url :: String, listOfWords :: [String] } deriving (Show, Generic)
+writeParsedFile :: Integer -> [String] -> IO ()
+writeParsedFile id htmlWords = withUtf8 $ do
+    let parsedHtml = ParsedHtml { webId = id, listOfWords = htmlWords }
+    I.appendFile "archive/parsedHtml.json" $ encodeToLazyText parsedHtml
+    I.appendFile "archive/parsedHtml.json" $ "\n"
+    
+data ParsedHtml = ParsedHtml { webId :: Integer, listOfWords :: [String] } deriving (Show, Generic)
 instance ToJSON ParsedHtml
+
+writeIndices :: Integer -> String -> IO ()
+writeIndices id url = withUtf8 $ do
+    let index = Index { myId = id, url = url }
+    I.appendFile "archive/indices.json" $ encodeToLazyText index
+    I.appendFile "archive/indices.json" $ "\n"
+    
+data Index = Index { myId :: Integer, url :: String } deriving (Show, Generic)
+instance ToJSON Index
