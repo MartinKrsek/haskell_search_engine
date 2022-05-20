@@ -1,0 +1,26 @@
+[
+    {
+    "listOfWords": [
+        "dog",
+        "cat",
+        "mouse"
+    ],
+    "webId": 1
+},
+{
+    "listOfWords": [
+        "dog",
+        "cat",
+        "pig"
+    ],
+    "webId": 2
+},
+{
+    "listOfWords": [
+        "pig",
+        "cat",
+        "mouse"
+    ],
+    "webId": 3
+}
+]
