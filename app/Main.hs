@@ -1,13 +1,13 @@
 module Main where
 
-import Data.Aeson
-import qualified Data.ByteString.Lazy as B
 import Lib
 import Reader
 import Inverser
+import Indices
 
 main :: IO ()
 main = do 
     -- readMyFile "archive/testBig.txt"
-    inverse
+    -- inverse
+    readIndices "archive/indices.json" [1,3]
     putStr "Finished successfully!"
