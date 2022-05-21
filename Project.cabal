@@ -30,6 +30,7 @@ library
       Lib
       Parser
       Reader
+      UserIO
       Writer
   other-modules:
       Paths_Project
