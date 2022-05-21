@@ -3,23 +3,44 @@ module Parser
   ( parse )
 where
 import Writer 
+import Data.List
 import Data.Char
 import Text.HTML.TagSoup
+import Text.Regex.Posix
+import Data.Typeable
 
 stringToIoString :: String -> IO String
 stringToIoString string = return string
 
 {-
-Method which takes url and html and parses given 
-HTML to [String] of words.
+Method which takes id and html and parses given 
+HTML to [String] of words and write these into file.
 -}
-htmlToWordList :: String -> String -> IO ()
-htmlToWordList url html = do
-  src <- stringToIoString html
-  let foundWords = fromBody $ parseTags src
-  -- mapM_ print foundWords
-  writeMyFile url foundWords
-  where fromBody = words . innerText . dropWhile (~/= "<body>")
+parse :: Integer -> String -> IO ()
+parse id html = do
+  src <- parseTags <$> stringToIoString html
+  let title = concat $ map words $ map g $ sections (~== "<title>") src
+  let metaContent = concat $ map words $ map getContent $ sections (~== "<meta name=\"description\">") src
+  let h1 = concat $ map words $ map g $ sections (~== "<h1>") src
+  let h2 = concat $ map words $ map g $ sections (~== "<h2>") src
+  let h3 = concat $ map words $ map g $ sections (~== "<h3>") src
+  let h4 = concat $ map words $ map g $ sections (~== "<h4>") src
+  let h5 = concat $ map words $ map g $ sections (~== "<h5>") src
+  let h6 = concat $ map words $ map g $ sections (~== "<h6>") src
+  let imgAlt = concat $ map words $ map getAlt $ sections (~== "<img>") src
+  let span = concat $ map words $ map g $ sections (~== "<span>") src
+  let div = concat $ map words $ map g $ sections (~== "<div>") src
+  writeParsedFile id (nub $ title ++ metaContent ++ h1 ++ h2 ++ h3 ++ h4 ++ h5 ++ h6 ++ imgAlt ++ span ++ div)
+  where getContent = fromAttrib "content" . head . filter isTagOpen
+        getAlt = fromAttrib "alt" . head . filter isTagOpen
+        g = dequote . unwords . words . fromTagText . head . filter isTagText
 
-parse :: String -> String -> IO ()
-parse url html = htmlToWordList url html
+        dequote ('\"':xs) | last xs == '\"' = init xs
+        dequote x = x
+
+getHrefLink :: TagRep t => t -> [Tag String] -> [String]
+getHrefLink selector tags =
+  map f $ sections (~== selector)  tags
+  where
+    f = fromAttrib "content"  . head . filter isTagOpen
+
