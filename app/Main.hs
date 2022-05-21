@@ -4,8 +4,10 @@ import Data.Aeson
 import qualified Data.ByteString.Lazy as B
 import Lib
 import Reader
+import Inverser
 
 main :: IO ()
 main = do 
-    readMyFile "archive/test.txt"
+    -- readMyFile "archive/testBig.txt"
+    inverse
     putStr "Finished successfully!"
