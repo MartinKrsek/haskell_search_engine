@@ -5,12 +5,11 @@ This is a implementation of PageRank algorithm for Functional Programing's team 
 PageRank algorithm belongs to https://github.com/derekchiang
 
 PageRank URL https://github.com/derekchiang/Haskell-Page-Rank
-## Run and outputs
-Script will create these files while running
+
 ### Input
 You will be asked to type path to your desired input
 ### For processing
-In folder **data**
+Script will create these files while running in folder **data**
 - anchors.txt
 - current_anchors.txt
 - graph.txt
