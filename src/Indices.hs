@@ -13,15 +13,23 @@ import Data.Foldable
 loadCollection :: FilePath -> IO B.ByteString
 loadCollection = B.readFile
 
+jsonFile :: FilePath
+jsonFile = "archive/indices.json"
+
+getJSON :: IO B.ByteString
+getJSON = B.readFile jsonFile
+
 readIndices :: String -> [Int] -> IO ()
 readIndices fileName ids = do
-    res <- loadCollection fileName
-    let byLine = B.split (c2w '\n') res
-    let indices = catMaybes $ map (\line -> decode line :: Maybe Index) byLine
+ d <- (eitherDecode <$> getJSON) :: IO (Either String [Index])
+ case d of
+  Left err -> putStrLn err
+  Right indices -> do
     let webUrls = forLoop(indices, ids)
     putStrLn "We found Your search on these websites: "
     forM_ webUrls $ \webUrl -> do
         print webUrl
+
 
 forLoop :: ([Index], [Int]) -> [Index]
 forLoop ([], _) = []
