@@ -10,25 +10,18 @@ import qualified Data.ByteString.Lazy as B
 import Data.Maybe (catMaybes)
 import Data.Foldable
 
-loadCollection :: FilePath -> IO B.ByteString
-loadCollection = B.readFile
+getJSON :: FilePath -> IO B.ByteString
+getJSON fileName = B.readFile fileName
 
-jsonFile :: FilePath
-jsonFile = "archive/indices.json"
-
-getJSON :: IO B.ByteString
-getJSON = B.readFile jsonFile
-
-readIndices :: String -> [Int] -> IO ()
+readIndices :: FilePath -> [Int] -> IO ()
 readIndices fileName ids = do
- d <- (eitherDecode <$> getJSON) :: IO (Either String [Index])
+ d <- (eitherDecode <$> getJSON fileName) :: IO (Either String [Index])
  case d of
   Left err -> putStrLn err
   Right indices -> do
     let webUrls = forLoop(indices, ids)
-    putStrLn "We found Your search on these websites: "
-    forM_ webUrls $ \webUrl -> do
-        print webUrl
+    putStrLn "We found Your search on these websites:"
+    print webUrls
 
 
 forLoop :: ([Index], [Int]) -> [Index]
@@ -42,13 +35,5 @@ forLoop (index:indices, ids) =
 getId :: Index -> Int
 getId (Index myId _) = myId
 
-getUrl :: Index -> String
-getUrl (Index _ url) = url
-
 data Index = Index { myId :: Int, url :: String } deriving (Show,Generic)
-
-instance FromJSON Index where
-  parseJSON (Object v) =
-    Index
-      <$> (v .: "myId")
-      <*> (v .: "url")
+instance FromJSON Index
