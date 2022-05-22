@@ -13,30 +13,31 @@ import Data.Foldable
 loadCollection :: FilePath -> IO B.ByteString
 loadCollection = B.readFile
 
-readIndices :: String -> [Integer] -> IO ()
+readIndices :: String -> [Int] -> IO ()
 readIndices fileName ids = do
     res <- loadCollection fileName
     let byLine = B.split (c2w '\n') res
     let indices = catMaybes $ map (\line -> decode line :: Maybe Index) byLine
-    let webUrls = []
-    print (forLoop(indices, ids))
-    print indices
+    let webUrls = forLoop(indices, ids)
+    putStrLn "We found Your search on these websites: "
+    forM_ webUrls $ \webUrl -> do
+        print webUrl
 
-forLoop :: ([Index], [Integer]) -> [String]
+forLoop :: ([Index], [Int]) -> [Index]
 forLoop ([], _) = []
 forLoop ([_], []) = []
 forLoop (index:indices, ids) = 
     if elem (getId(index)) ids
-    then [getUrl(index)] ++ forLoop(indices, ids)
+    then [index] ++ forLoop(indices, ids)
     else forLoop(indices, ids)
 
-getId :: Index -> Integer
+getId :: Index -> Int
 getId (Index myId _) = myId
 
 getUrl :: Index -> String
 getUrl (Index _ url) = url
 
-data Index = Index { myId :: Integer, url :: String } deriving (Show,Generic)
+data Index = Index { myId :: Int, url :: String } deriving (Show,Generic)
 
 instance FromJSON Index where
   parseJSON (Object v) =

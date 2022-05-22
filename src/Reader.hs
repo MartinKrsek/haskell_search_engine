@@ -1,11 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
-module Reader
-  ( 
-    readMyFile,
-    loadCollection,
-  )
+module Reader (readMyFile)
 where
 
 import Control.Applicative
