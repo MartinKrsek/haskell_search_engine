@@ -3,13 +3,13 @@ module Main where
 import Lib
 import Reader
 import Inverser
-import Indices
 import UserIO
+import GHC.IO.Encoding
 
 main :: IO ()
-main = do 
-    -- readMyFile "archive/testBig.txt"
-    -- inverse
-    readIndices "archive/indices.json" [1,3]
-    -- search
+main = do
+    setLocaleEncoding utf8
+    readMyFile "archive/collectionFirst100.jl"
+    inverse
+    search
     putStr "Finished successfully!"
