@@ -8,7 +8,8 @@ This is an example of how to set up and run this project locally.
  - download and unpack files from [folder](https://datasetsearch.research.google.com/search?query=html%20pages&docid=L2cvMTFqbnpkbGhsbQ%3D%3D) into archive/folder directory
 
 ## __Usage__
-#### __Important note__: Indexing does take too long depending on file size We do strongly encourage You to use provided file archive/collectionFirst100.jl. You can do so by changing line `createIndices "archive/collection.jl"` for `createIndices "archive/collectionFirst100.jl"` inside Main.hs file 
+__Important note:__
+Indexing does take too long depending on file size We do strongly encourage You to use provided file archive/collectionFirst100.jl. You can do so by changing line `createIndices "archive/collection.jl"` for `createIndices "archive/collectionFirst100.jl"` inside Main.hs file. You can also use prepared python file head.py to export first N lines of file and use this, smaller file.
  - In root folder run commands:
     - ```stack build```
     - ```stack run```
