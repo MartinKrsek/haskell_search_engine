@@ -24,6 +24,7 @@ import Data.Char (isAlpha, toLower, isSpace)
 import qualified Data.Set
 import Data.Text.Lazy.IO as I
 import Data.Aeson.Text (encodeToLazyText)
+import Indices
 
 -- | Type of each JSON entry in record syntax.
 data InverseIndex =
@@ -51,8 +52,6 @@ search = do
  d <- (eitherDecode <$> getJSON) :: IO (Either String [InverseIndex])
  -- If d is Left, the JSON was malformed.
  -- In that case, we report the error.
- -- Otherwise, we perform the operation of
- -- our choice. In this case, just print it.
  case d of
   Left err -> System.IO.putStrLn err
   Right ps -> logicFunction ps
@@ -63,7 +62,7 @@ logicFunction ps = do
  System.IO.putStrLn "Let me search..."
  let keywords = getWords searchFor
  let webIds = nub (getIndexes (keywords, ps))
- print webIds
+ readIndices "archive/indices.json" webIds
 
 getIndexes :: ([String], [InverseIndex]) -> [Int]
 getIndexes ([],[]) = []
