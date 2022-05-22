@@ -105,6 +105,5 @@ testfunction2 xs = do
  let  numberedWords = getSomething xs
       wordPagePairs = indexPages numberedWords
       finalList     = invertedIndex wordPagePairs
- print finalList
  let finalClasses = createInversedClass finalList
  I.writeFile "archive/inverseIndex.json" (encodeToLazyText finalClasses)
