@@ -31,7 +31,6 @@ library
       Parser
       Reader
       UserIO
-      Writer
   other-modules:
       Paths_Project
   hs-source-dirs:

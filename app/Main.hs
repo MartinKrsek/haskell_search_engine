@@ -13,10 +13,8 @@ main = do
  createIndexes <- getLine
  if createIndexes == "y"
   then do
-   readMyFile "archive/collectionFirst100.jl"
+   readMyFile "archive/collection.jl"
    inverse
    search
-   putStr "Finished successfully!"
   else do
-   putStrLn "Okay, we will use old indices."
    search

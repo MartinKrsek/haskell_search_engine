@@ -31,7 +31,7 @@ forLoop (index:indices, ids) =
     else forLoop(indices, ids)
 
 getId :: Index -> Int
-getId (Index myId _) = myId
+getId (Index indexId _) = indexId
 
-data Index = Index { myId :: Int, url :: String } deriving (Show,Generic)
+data Index = Index { indexId :: Int, indexUrl :: String } deriving (Show,Generic)
 instance FromJSON Index

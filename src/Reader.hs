@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, DeriveGeneric, DeriveAnyClass #-}
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module Reader (readMyFile)
@@ -6,6 +6,8 @@ where
 
 import Control.Applicative
 import Data.Aeson
+import Data.Aeson.Text (encodeToLazyText)
+import GHC.Generics
 import Data.ByteString.Internal (c2w)
 import qualified Data.ByteString.Lazy as B
 import Data.Char
@@ -14,44 +16,49 @@ import GHC.Generics ()
 import System.IO
 import Data.Foldable
 import Parser
-import Writer 
 import Data.Text.Lazy.IO as I
+import Text.HTML.TagSoup
+import Data.List
+import Data.Char
 
 loadCollection :: FilePath -> IO B.ByteString
 loadCollection = B.readFile
 
-readMyFile :: FilePath -> IO [WebPage]
+readMyFile :: FilePath -> IO ()
 readMyFile file = do
-  System.IO.writeFile "archive/parsedHtml.json" ""
-  System.IO.writeFile "archive/indices.json" ""
   res <- loadCollection file
   let byLine = B.split (c2w '\n') res
   let decoded = map (\line -> decode line :: Maybe WebPage) byLine
-  let r = catMaybes decoded
-  let a = zip [1..] r
-  I.appendFile "archive/parsedHtml.json" $ "["
-  I.appendFile "archive/indices.json" $ "["
-  forM_ a $ \s -> do
-    let url = getUrl (snd(s))
-    let id = fst(s)
-    let html = getHtml (snd(s))
-    writeIndices id url
-    parse id html
-  I.appendFile "archive/indices.json" $ "{\"myId\":-1,\"url\":\"\"}]"
-  I.appendFile "archive/parsedHtml.json" $ "{\"listOfWords\":[],\"webId\":-1}]"
-  return r
+  let justDecoded = catMaybes decoded
+  let indices = (getAllUrls (justDecoded,[1..]))
+  I.writeFile "archive/indices.json" (encodeToLazyText indices)
+  let parsedHtmls = getAllHtmls(justDecoded,[1..])
+  I.writeFile "archive/parsedHtml.json" (encodeToLazyText parsedHtmls)
 
 getUrl :: WebPage -> String
 getUrl (WebPage url _) = url
 
-getHtml :: WebPage -> String
+getAllUrls :: ([WebPage], [Int]) -> [Index]
+getAllUrls ([],_) = []
+getAllUrls (webPage:webPages, index:indices) = [Index { indexId = index, indexUrl = getUrl webPage }] ++ getAllUrls(webPages,indices)
+
+getHtml :: (WebPage) -> String
 getHtml (WebPage _ html) = html
 
-data WebPage = WebPage
-  { url :: String,
-    htmlContent :: String
-  }
-  deriving (Show)
+getAllHtmls :: ([WebPage], [Int]) -> [Parser.ParsedHtml]
+getAllHtmls ([], _) = []
+getAllHtmls (webPage:webPages, index:indices) = parseHtml(index, getHtml webPage) ++ getAllHtmls(webPages, indices)
+
+data WebPage = WebPage { url :: String, htmlContent :: String } deriving (Show)
+
+data Index = Index { indexId :: Int, indexUrl :: String } deriving (Show, Generic)
+instance ToJSON Index
+
+instance FromJSON Index where
+  parseJSON (Object v) =
+    Index
+      <$> (v .: "myId")
+      <*> (v .: "url")
 
 instance FromJSON WebPage where
   parseJSON (Object v) =

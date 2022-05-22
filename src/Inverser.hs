@@ -15,10 +15,8 @@ import Data.Text
 import Control.Applicative
 import Control.Monad
 import qualified Data.ByteString.Lazy as B
--- import Data.Set
 import Data.List
 import Data.Maybe
--- import Network.HTTP.Conduit (simpleHttp)
 import GHC.Generics
 import System.IO
 import Data.List
