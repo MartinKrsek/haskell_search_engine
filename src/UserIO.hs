@@ -57,7 +57,7 @@ search = do
   Right ps -> logicFunction ps
 
 logicFunction ps = do
- System.IO.putStrLn "Hello, What are you looking for?"
+ System.IO.putStrLn "What are you looking for?"
  searchFor <- System.IO.getLine
  System.IO.putStrLn "Let me search..."
  let keywords = getWords searchFor
