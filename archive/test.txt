@@ -1,3 +1,0 @@
-{"url": "https://www.uol.com.br/#versao-mobile", "html_content": "<!DOCTYPE html><html><head><title> Title </title><title>Title </title><meta name=\"description\" content=\"meta description\"><meta name=\"description\" content=\"meta description2\"></head><body><h1> h1dog</h1><h1>h1dog </h1> cat mouse</body>"}
-{"url": "https://www.uol.com.br/carros/", "html_content": "<body><title> Title2 </title> <span> span2 </span> cat pig <span> spanTest </span> <div> divTest </div></body>"}
-{"url": "https://www.uol.com.br/vivabem/podcast/maratona/", "html_content": "<body> <div> pig </div> cat mouse <img src=\"img_girl.jpg\" alt=\"my img src\"> <img src=\"img_girl.jpg\" alt=\"my img src2\"> </body>"}
