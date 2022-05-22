@@ -1,54 +1,44 @@
 {-# LANGUAGE DeriveGeneric, DeriveAnyClass, OverloadedStrings #-}
 
-module Indices (readIndices)
+module Indices (printWebsitesByIds)
 where
     
-import Data.Aeson
-import GHC.Generics
-import Data.ByteString.Internal (c2w)
+import Data.Aeson (FromJSON, eitherDecode)
+import GHC.Generics (Generic)
+import Data.Foldable (forM_)
 import qualified Data.ByteString.Lazy as B
-import Data.Maybe (catMaybes)
-import Data.Foldable
 
-loadCollection :: FilePath -> IO B.ByteString
-loadCollection = B.readFile
+getJSON :: FilePath -> IO B.ByteString
+getJSON fileName = B.readFile fileName
 
-jsonFile :: FilePath
-jsonFile = "archive/indices.json"
-
-getJSON :: IO B.ByteString
-getJSON = B.readFile jsonFile
-
-readIndices :: String -> [Int] -> IO ()
-readIndices fileName ids = do
- d <- (eitherDecode <$> getJSON) :: IO (Either String [Index])
+{-
+function which takes filePath and list of integers and returns objects of Index from file which 
+do match provided list of ids
+-}
+printWebsitesByIds :: FilePath -> [Int] -> IO ()
+printWebsitesByIds fileName ids = do
+ d <- (eitherDecode <$> getJSON fileName) :: IO (Either String [Index])
  case d of
   Left err -> putStrLn err
   Right indices -> do
-    let webUrls = forLoop(indices, ids)
-    putStrLn "We found Your search on these websites: "
-    forM_ webUrls $ \webUrl -> do
-        print webUrl
+    let webs = filterByIdIn(indices, ids)
+    putStrLn "We found Your search on these websites:"
+    forM_ webs $ \web -> do
+      print web
 
-
-forLoop :: ([Index], [Int]) -> [Index]
-forLoop ([], _) = []
-forLoop ([_], []) = []
-forLoop (index:indices, ids) = 
+{-
+recursive function to fiter all objects matching provided list of ids
+-}
+filterByIdIn :: ([Index], [Int]) -> [Index]
+filterByIdIn ([], _) = []
+filterByIdIn ([_], []) = []
+filterByIdIn (index:indices, ids) = 
     if elem (getId(index)) ids
-    then [index] ++ forLoop(indices, ids)
-    else forLoop(indices, ids)
+    then [index] ++ filterByIdIn(indices, ids)
+    else filterByIdIn(indices, ids)
 
 getId :: Index -> Int
-getId (Index myId _) = myId
+getId (Index indexId _) = indexId
 
-getUrl :: Index -> String
-getUrl (Index _ url) = url
-
-data Index = Index { myId :: Int, url :: String } deriving (Show,Generic)
-
-instance FromJSON Index where
-  parseJSON (Object v) =
-    Index
-      <$> (v .: "myId")
-      <*> (v .: "url")
+data Index = Index { indexId :: Int, indexUrl :: String } deriving (Show,Generic)
+instance FromJSON Index

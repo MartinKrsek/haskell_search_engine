@@ -25,13 +25,11 @@ source-repository head
 
 library
   exposed-modules:
+      Indexer
       Indices
       Inverser
-      Lib
       Parser
-      Reader
       UserIO
-      Writer
   other-modules:
       Paths_Project
   hs-source-dirs:

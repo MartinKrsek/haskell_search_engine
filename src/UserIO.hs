@@ -62,7 +62,7 @@ logicFunction ps = do
  System.IO.putStrLn "Let me search..."
  let keywords = getWords searchFor
  let webIds = nub (getIndexes (keywords, ps))
- readIndices "archive/indices.json" webIds
+ printWebsitesByIds "archive/indices.json" webIds
 
 getIndexes :: ([String], [InverseIndex]) -> [Int]
 getIndexes ([],[]) = []
@@ -73,7 +73,7 @@ findMatchingIndex :: (String, [InverseIndex]) -> [Int]
 findMatchingIndex ( _ , []) = []
 findMatchingIndex ([], fx) = []
 findMatchingIndex (keyword, index:indexes) = 
- if keywordIsPrefix (keyword, index)
+ if keywordEqualsIndex (keyword, index)
  then (listOfWebIds index)
  else findMatchingIndex (keyword, indexes)
 
