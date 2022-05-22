@@ -1,7 +1,6 @@
 module Main where
 
-import Lib
-import Reader
+import Indexer
 import Inverser
 import UserIO
 import GHC.IO.Encoding
@@ -13,8 +12,7 @@ main = do
  createIndexes <- getLine
  if createIndexes == "y"
   then do
-   readMyFile "archive/collection.jl"
+   createIndices "archive/collection.jl"
    inverse
    search
-  else do
-   search
+  else search
