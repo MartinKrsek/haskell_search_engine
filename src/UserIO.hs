@@ -73,7 +73,7 @@ findMatchingIndex :: (String, [InverseIndex]) -> [Int]
 findMatchingIndex ( _ , []) = []
 findMatchingIndex ([], fx) = []
 findMatchingIndex (keyword, index:indexes) = 
- if keywordIsPrefix (keyword, index)
+ if keywordEqualsIndex (keyword, index)
  then (listOfWebIds index)
  else findMatchingIndex (keyword, indexes)
 

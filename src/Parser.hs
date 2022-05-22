@@ -42,5 +42,5 @@ getHrefLink :: TagRep t => t -> [Tag String] -> [String]
 getHrefLink selector tags =
   map f $ sections (~== selector)  tags
   where
-    f = fromAttrib "content"  . head . filter isTagOpen
+    f = fromAttrib "content" . head . filter isTagOpen
 
