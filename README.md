@@ -11,24 +11,24 @@ Script will create these files while running
 You will be asked to type path to your desired input
 ### For processing
 In folder **data**
--anchors.txt
--current_anchors.txt
--graph.txt
--parsed_htmls.txt
--urls.txt
+- anchors.txt
+- current_anchors.txt
+- graph.txt
+- parsed_htmls.txt
+- urls.txt
 ### Output
 In folder **output**
--pagerank.txt
+- pagerank.txt
 
 ## Contents 
--**Pagerank.hs** -computes pagerank of graph
--**PgRnParser.hs** -html/json parsing
--**PgRnReader.hs** 
--**PgRnWriter.hs** 
--**Process.hs** -Page processing (graph nodes)
+- **Pagerank.hs** -computes pagerank of graph
+- **PgRnParser.hs** -html/json parsing
+- **PgRnReader.hs** 
+- **PgRnWriter.hs** 
+- *Process.hs** -Page processing (graph nodes)
 
 ## Usage
 You need to have **stack** installed on your machine in order to run this.
 Run commands:
--stack build
--stack run
+- stack build
+- stack run
