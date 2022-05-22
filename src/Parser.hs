@@ -19,34 +19,24 @@ HTML to [String] of words and write these into file.
 parse :: Integer -> String -> IO ()
 parse id html = do
   src <- parseTags <$> stringToIoString html
-  let title = concat $ map words $ map removePunctuation $ map g $ sections (~== "<title>") src
+  let title = myMap src "<title>"
   let metaContent = concat $ map words $ map getContent $ sections (~== "<meta name=\"description\">") src
-  let h1 = concat $ map words $ map removePunctuation $ map g $ sections (~== "<h1>") src
-  let h2 = concat $ map words $ map removePunctuation $ map g $ sections (~== "<h2>") src
-  let h3 = concat $ map words $ map removePunctuation $ map g $ sections (~== "<h3>") src
-  let h4 = concat $ map words $ map removePunctuation $ map g $ sections (~== "<h4>") src
-  let h5 = concat $ map words $ map removePunctuation $ map g $ sections (~== "<h5>") src
-  let h6 = concat $ map words $ map removePunctuation $ map g $ sections (~== "<h6>") src
-  let imgAlt = concat $ map words $ map removePunctuation $ map getAlt $ sections (~== "<img>") src
-  let span = concat $ map words $ map removePunctuation $ map g $ sections (~== "<span>") src
-  let div = concat $ map words $ map removePunctuation $ map g $ sections (~== "<div>") src
+  let h1 = myMap src "<h1>"
+  let h2 = myMap src "<h2>"
+  let h3 = myMap src "<h3>"
+  let h4 = myMap src "<h4>"
+  let h5 = myMap src "<h5>"
+  let h6 = myMap src "<h6>"
+  let imgAlt = myImgMap src
+  let span = myMap src "<span>"
+  let div = myMap src "<div>"
   writeParsedFile id (nub $ title ++ metaContent ++ h1 ++ h2 ++ h3 ++ h4 ++ h5 ++ h6 ++ imgAlt ++ span ++ div)
   where getContent = fromAttrib "content" . head . filter isTagOpen
         getAlt = fromAttrib "alt" . head . filter isTagOpen
-        g = dequote . unwords . words . fromTagText . head . filter isTagText
-
+        removeEmpty = filter (not . null)
+        myImgMap src = concat $ map words $ removeEmpty $ map getAlt $ sections (~== "<img>") src
+        clear = dequote . unwords . words . map toLower . filter (`notElem` "{},.?!-:;\"\'|"). filter isAscii . fromTagText . head . filter isTagText
+        myMap src tag = concat $ map words $ removeEmpty $ map clear $ sections (~== tag) src
         dequote ('\"':xs) | last xs == '\"' = init xs
         dequote x = x
- 
-removePunctuation :: String -> String
-removePunctuation [] = []
-removePunctuation (s:sx)
-    | (isAlpha s) || (isSpace s) = Data.Char.toLower s : removePunctuation sx
-    | otherwise                  = removePunctuation sx
-
-getHrefLink :: TagRep t => t -> [Tag String] -> [String]
-getHrefLink selector tags =
-  map f $ sections (~== selector)  tags
-  where
-    f = fromAttrib "content" . head . filter isTagOpen
 
