@@ -37,7 +37,7 @@ readMyFile file = do
     let html = getHtml (snd(s))
     writeIndices id url
     parse id html
-  I.appendFile "archive/indices.json" $ "{}]"
+  I.appendFile "archive/indices.json" $ "{\"myId\":-1,\"url\":\"\"}]"
   I.appendFile "archive/parsedHtml.json" $ "{\"listOfWords\":[],\"webId\":-1}]"
   return r
 
