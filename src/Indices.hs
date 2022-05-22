@@ -5,9 +5,7 @@ where
     
 import Data.Aeson
 import GHC.Generics
-import Data.ByteString.Internal (c2w)
 import qualified Data.ByteString.Lazy as B
-import Data.Maybe (catMaybes)
 import Data.Foldable
 
 getJSON :: FilePath -> IO B.ByteString
@@ -19,10 +17,10 @@ readIndices fileName ids = do
  case d of
   Left err -> putStrLn err
   Right indices -> do
-    let webUrls = forLoop(indices, ids)
+    let webs = forLoop(indices, ids)
     putStrLn "We found Your search on these websites:"
-    print webUrls
-
+    forM_ webs $ \web -> do
+      print web
 
 forLoop :: ([Index], [Int]) -> [Index]
 forLoop ([], _) = []
