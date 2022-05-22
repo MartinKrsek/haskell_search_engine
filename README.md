@@ -24,7 +24,7 @@ In folder **output**
 - **PgRnParser.hs** -html/json parsing
 - **PgRnReader.hs** 
 - **PgRnWriter.hs** 
-- *Process.hs** -Page processing (graph nodes)
+- **Process.hs** -Page processing (graph nodes)
 
 ## Usage
 You need to have **stack** installed on your machine in order to run this.

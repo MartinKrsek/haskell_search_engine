@@ -16,14 +16,13 @@ import Data.Char
 import Data.Maybe (catMaybes)
 import Text.HTML.TagSoup.Match (getTagContent)
 import Data.Foldable
-import Control.Monad (liftM)
+import Control.Monad (liftM,when,unless)
 import Data.Aeson (Value(Bool))
 import Text.Regex.TDFA
 import Control.Applicative (liftA2)
 import Data.Text.Lazy.IO as I
 import Data.Aeson.Text (encodeToLazyText)
 import Main.Utf8
-import Control.Monad (when,unless)
 stringToIoString :: String -> IO String
 stringToIoString  = return
 

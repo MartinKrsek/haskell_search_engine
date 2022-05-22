@@ -17,7 +17,6 @@ import qualified Data.Text.Lazy.IO as I
 import Data.Aeson.Text (encodeToLazyText)
 import Main.Utf8
 import Data.Foldable
-import Prelude (writeFile)
 
 writeParsedPages :: String -> [String] -> IO ()
 writeParsedPages url htmlWords = withUtf8 $ do

@@ -1,7 +1,6 @@
 module Main where
 
 --my modules
-import Lib
 import PgRnReader (readWebPages)
 import Process (process,processAnc)
 import Pagerank
